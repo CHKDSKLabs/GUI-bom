@@ -1,1 +1,11 @@
+#local development files
+.github/
+.pytest_cache/
+.vscode/
+.dockerignore
+.ruff_cache/
+L_BOM.egg-info/
+build/
+.venv/
+#python
 __pycache__/

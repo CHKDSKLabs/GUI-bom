@@ -3,7 +3,7 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "llm-sbom"
+name = "L-BOM"
 version = "0.1.0"
 description = "Generate Software Bill of Materials documents for local LLM model files."
 readme = "README.md"
@@ -16,10 +16,11 @@ dependencies = [
   "click",
   "rich",
   "dataclasses-json",
+  "flask>=3,<4",
 ]
 
 [project.scripts]
-llm-sbom = "llm_sbom.cli:main"
+L-BOM = "llm_sbom.cli:main"
 
 [project.optional-dependencies]
 dev = [
@@ -33,4 +34,11 @@ license-files = ["LICENSE"]
 
 [tool.setuptools.packages.find]
 include = ["llm_sbom*"]
+
+[tool.setuptools.package-data]
+llm_sbom = [
+  "web/templates/*.html",
+  "web/static/*.css",
+  "web/static/*.js",
+]
 

@@ -1,4 +1,4 @@
-"""Output rendering helpers for llm-sbom."""
+"""Output rendering helpers for L-BOM."""
 
 from __future__ import annotations
 

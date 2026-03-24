@@ -1,6 +1,8 @@
-# L-BOM 💘
+# GUI-BOM
 
-`L-BOM` is a small Python CLI that inspects local LLM model artifacts such as `.gguf` and `.safetensors` files and emits a lightweight Software Bill of Materials (SBOM) with file identity, format details, model metadata, and parsing warnings.
+`GUI-BOM` is a local browser-based wrapper around `L-BOM`, a Python tool that inspects local LLM model artifacts such as `.gguf` and `.safetensors` files and emits a lightweight Software Bill of Materials with file identity, format details, model metadata, and parsing warnings.
+
+The project now supports both a CLI workflow and a polished local GUI for people who would rather click through a browser than work in a command prompt.
 
 ## Install
 
@@ -11,39 +13,84 @@ pip install .
 For editable local development:
 
 ```bash
-pip install -e .
+pip install -e ".[dev]"
 ```
 
-## Usage
+## GUI usage
+
+Start the local web app:
+
+```bash
+l-bom gui
+```
+
+By default the GUI binds to `127.0.0.1:7860` and opens a browser tab automatically.
+
+To expose it from Docker or another machine-friendly environment:
+
+```bash
+l-bom gui --host 0.0.0.0 --port 7860 --no-open-browser
+```
+
+The GUI includes:
+
+- a local file browser for folders and supported model files
+- one-click scanning for a single file or an entire directory
+- summary cards, document details, and warning views
+- copy and download actions for JSON, SPDX, and table output
+
+## One-click Windows launch
+
+After extracting the project zip, double-click `start-gui.bat`.
+
+The launcher creates a local virtual environment if needed, installs the package, and starts the GUI in your browser.
+
+## Docker usage
+
+Build the image:
+
+```bash
+docker build -t l-bom-gui .
+```
+
+Run the GUI and mount a host folder of models into the container:
+
+```bash
+docker run --rm -p 7860:7860 -v C:\models:/models l-bom-gui
+```
+
+Then open `http://127.0.0.1:7860` and browse to `/models` inside the app.
+
+## CLI usage
 
 Show the installed version:
 
 ```bash
-llm-sbom version
+l-bom version
 ```
 
 Scan a single model file and emit JSON:
 
 ```bash
-llm-sbom scan .\models\Llama-3.1-8B-Instruct-Q4_K_M.gguf
+l-bom scan .\models\Llama-3.1-8B-Instruct-Q4_K_M.gguf
 ```
 
 Scan a single model file and emit SPDX tag-value:
 
 ```bash
-llm-sbom scan .\models\Llama-3.1-8B-Instruct-Q4_K_M.gguf --format spdx
+l-bom scan .\models\Llama-3.1-8B-Instruct-Q4_K_M.gguf --format spdx
 ```
 
-Scan a directory recursively and render a Rich table:
+Scan a directory recursively and render a table:
 
 ```bash
-llm-sbom scan .\models --format table
+l-bom scan .\models --format table
 ```
 
 Skip SHA256 hashing for very large files and write the result to disk:
 
 ```bash
-llm-sbom scan .\models --no-hash --output .\model-sbom.json
+l-bom scan .\models --no-hash --output .\model-sbom.json
 ```
 
 ## Sample JSON output
@@ -52,7 +99,7 @@ llm-sbom scan .\models --no-hash --output .\model-sbom.json
 {
   "sbom_version": "1.0",
   "generated_at": "2026-03-24T14:08:22.118000+00:00",
-  "tool_name": "llm-sbom",
+  "tool_name": "L-BOM",
   "tool_version": "0.1.0",
   "model_path": "C:\\models\\Llama-3.1-8B-Instruct-Q4_K_M.gguf",
   "model_filename": "Llama-3.1-8B-Instruct-Q4_K_M.gguf",

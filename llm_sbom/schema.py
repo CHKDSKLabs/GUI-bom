@@ -1,4 +1,4 @@
-"""Schema definitions for llm-sbom documents."""
+"""Schema definitions for L-BOM documents."""
 
 from __future__ import annotations
 

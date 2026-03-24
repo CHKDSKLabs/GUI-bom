@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GUI-BOM</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}">
+  <script type="module" src="{{ url_for('static', filename='app.js') }}"></script>
+</head>
+<body>
+  <div class="page-shell">
+    <header class="hero card">
+      <div class="hero-copy">
+        <p class="eyebrow">Local model inventory</p>
+        <h1>L-BOM Studio</h1>
+        <p>
+          Scan GGUF and safetensors files using the panels below, review the software bill of materials,
+          then copy or download the output without touching a terminal.
+
+          Be sure to ⭐ the <a href="https://github.com/chkdsklabs/gui-bom">repo on GitHub</a> to be notified of updates.
+        </p>
+      </div>
+      <div class="hero-badges">
+        <span class="badge">Local first</span>
+        <span class="badge">Docker ready</span>
+        <span class="badge">Version {{ version }}</span>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <section class="card controls">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Scan setup</p>
+            <h2>Choose what to inspect</h2>
+          </div>
+        </div>
+
+        <label class="field">
+          <span class="field-label">Model file or folder</span>
+          <div class="path-row">
+            <input id="scan-path" type="text" placeholder="Windows: C:\models | Docker: /models" autocomplete="off">
+            <button id="scan-button" class="primary-button">Scan now</button>
+          </div>
+        </label>
+
+        <div class="option-grid">
+          <div class="field">
+            <span class="field-label">Output format</span>
+            <div id="format-selector" class="segmented" role="tablist" aria-label="Output format">
+              <button class="segment active" data-format="json" type="button">JSON</button>
+              <button class="segment" data-format="spdx" type="button">SPDX</button>
+              <button class="segment" data-format="table" type="button">Table</button>
+            </div>
+          </div>
+
+          <label class="toggle">
+            <input id="hash-toggle" type="checkbox" checked>
+            <span>Compute SHA256 hashes</span>
+            <small>Turn this off for very large folders when you want results quickly.</small>
+          </label>
+        </div>
+
+        <div class="helper-strip">
+          <button id="use-current-folder" class="ghost-button" type="button">Use current folder</button>
+          <button id="copy-path" class="ghost-button" type="button">Copy path</button>
+        </div>
+
+        <div id="message" class="message" hidden></div>
+      </section>
+
+      <section class="card browser">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Local browser</p>
+            <h2>Navigate your files</h2>
+          </div>
+        </div>
+
+        <div class="browser-toolbar">
+          <select id="root-select" aria-label="Filesystem root"></select>
+          <button id="up-button" class="ghost-button" type="button">Up</button>
+          <button id="refresh-button" class="ghost-button" type="button">Refresh</button>
+        </div>
+
+        <div id="browser-path" class="browser-path">Loading file browser...</div>
+        <p class="browser-note">
+          Click folders to move around. Click a model file to fill the scan path. Use "Use current folder" when you
+          want to scan everything in the folder you are viewing.
+        </p>
+        <div id="browser-list" class="browser-list"></div>
+      </section>
+
+      <section class="card results">
+        <div class="section-heading results-heading">
+          <div>
+            <p class="eyebrow">Results</p>
+            <h2>Review the SBOM</h2>
+          </div>
+          <div class="action-row">
+            <button id="copy-output" class="ghost-button" type="button" disabled>Copy output</button>
+            <button id="download-output" class="primary-button" type="button" disabled>Download</button>
+          </div>
+        </div>
+
+        <div id="empty-state" class="empty-state">
+          Run a scan to see a polished summary, warnings, and the raw rendered output.
+        </div>
+
+        <div id="results-panel" hidden>
+          <div id="summary-grid" class="summary-grid"></div>
+
+          <div class="tabs">
+            <button class="tab-button active" data-tab="overview" type="button">Overview</button>
+            <button class="tab-button" data-tab="raw" type="button">Raw output</button>
+          </div>
+
+          <div id="overview-tab" class="tab-panel active">
+            <div id="document-grid" class="document-grid"></div>
+
+            <section class="warning-panel">
+              <div class="panel-title-row">
+                <h3>Warnings</h3>
+                <span id="warning-count" class="warning-count">0</span>
+              </div>
+              <div id="warning-list" class="warning-list"></div>
+            </section>
+          </div>
+
+          <div id="raw-tab" class="tab-panel">
+            <pre id="raw-output" class="raw-output"></pre>
+          </div>
+        </div>
+      </section>
+      <section class="card footer">
+        <div class="footer-copy">
+          <p>
+            L-BOM Studio is an open source project by <a href="https://chkdsklabs.io">CHKDSK Labs</a>. View the
+            code on <a href="https://github.com/chkdsklabs/l-bom">GitHub</a>.
+          </p>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
