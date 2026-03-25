@@ -13,6 +13,48 @@ pinned: true
 
 The project now supports both a CLI workflow and a polished local GUI for people who would rather click through a browser than work in a command prompt.
 
+## Quick start on Windows
+
+### Before you begin
+
+1. Install Python 3.10 or newer for Windows.
+2. During installation, enable the option to add Python to `PATH` if it is offered.
+3. Open PowerShell and confirm Python is available:
+
+```powershell
+py -3 --version
+```
+
+If `py` is not available, try:
+
+```powershell
+python --version
+```
+
+`start-gui.bat` needs one of those commands to exist already. It creates a virtual environment and installs the app, but it does not install Python for you.
+
+### Launch with the batch file
+
+1. Download or extract the project to a folder on your PC.
+2. Open the folder in File Explorer.
+3. Double-click `start-gui.bat`.
+4. Wait while the script creates `.venv`, upgrades `pip`, and installs the package.
+5. When the server starts, your browser should open automatically to `http://127.0.0.1:7860`.
+6. In the app, browse to a folder that contains `.gguf` or `.safetensors` files and run a scan.
+
+If the script prints `Unable to start the GUI.`, Python is usually missing or not available through `py` or `python`.
+
+### Launch manually from PowerShell
+
+If you prefer to run the setup yourself:
+
+```powershell
+py -3 -m venv .venv
+.venv\Scripts\python -m pip install --upgrade pip
+.venv\Scripts\python -m pip install .
+.venv\Scripts\python -m llm_sbom.cli gui
+```
+
 ## Install
 
 ```bash
@@ -27,7 +69,7 @@ pip install -e ".[dev]"
 
 ## GUI usage
 
-Start the local web app:
+Start the local web app manually after installing the package:
 
 ```bash
 l-bom gui
@@ -50,9 +92,17 @@ The GUI includes:
 
 ## One-click Windows launch
 
-After extracting the project zip, double-click `start-gui.bat`.
+`start-gui.bat` is the fastest way to get started on Windows once Python is installed.
 
-The launcher creates a local virtual environment if needed, installs the package, and starts the GUI in your browser.
+It:
+
+- tries `py -3` first and falls back to `python`
+- creates `.venv` if it does not exist yet
+- upgrades `pip`
+- installs the project into that virtual environment
+- starts the GUI locally
+
+If Python is not installed, the launcher will fail and print `Unable to start the GUI.`
 
 ## Docker usage
 
