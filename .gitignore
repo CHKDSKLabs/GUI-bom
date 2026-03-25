@@ -7,5 +7,6 @@
 L_BOM.egg-info/
 build/
 .venv/
+.github/
 #python
 __pycache__/
