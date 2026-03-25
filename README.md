@@ -4,6 +4,7 @@ emoji: 📚
 colorFrom: red
 colorTo: pink
 sdk: static
+python: "3.13.12"
 pinned: true
 ---
 
