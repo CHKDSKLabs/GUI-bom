@@ -4,7 +4,6 @@ emoji: 📚
 colorFrom: red
 colorTo: pink
 sdk: static
-app_file: index.html
 pinned: true
 ---
 
