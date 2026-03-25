@@ -1,3 +1,12 @@
+---
+title: GUI-BOM
+emoji: 📚
+colorFrom: red
+colorTo: pink
+sdk: static
+pinned: true
+---
+
 # GUI-BOM
 
 `GUI-BOM` is a local browser-based wrapper around `L-BOM`, a Python tool that inspects local LLM model artifacts such as `.gguf` and `.safetensors` files and emits a lightweight Software Bill of Materials with file identity, format details, model metadata, and parsing warnings.
