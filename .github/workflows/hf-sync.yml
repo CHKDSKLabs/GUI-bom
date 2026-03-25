@@ -20,5 +20,5 @@ jobs:
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          git remote add hf https://user:${HF_TOKEN}@huggingface.co/spaces/CHK-DSK-Labs/GUI-bom || git remote set-url hf https://user:${HF_TOKEN}@huggingface.co/spaces/CHK-DSK-Labs/GUI-bom
+          git remote add hf https://user:${HF_TOKEN}@huggingface.co/spaces/CHK-DSK-Labs/gui-bom || git remote set-url hf https://user:${HF_TOKEN}@huggingface.co/spaces/CHK-DSK-Labs/gui-bom
           git push --force hf HEAD:main
