@@ -33,6 +33,12 @@ const elements = {
   tabButtons: Array.from(document.querySelectorAll("[data-tab]")),
   overviewTab: document.querySelector("#overview-tab"),
   rawTab: document.querySelector("#raw-tab"),
+  hfOptions: document.querySelector("#hf-options"),
+  hfTitle: document.querySelector("#hf-title"),
+  hfShortDescription: document.querySelector("#hf-short-description"),
+  hfSdk: document.querySelector("#hf-sdk"),
+  hfAppFile: document.querySelector("#hf-app-file"),
+  hfAppPort: document.querySelector("#hf-app-port"),
 };
 
 boot().catch((error) => {
@@ -112,12 +118,14 @@ function bindEvents() {
       return;
     }
 
-    const extension = state.currentFormat === "json" ? "json" : "txt";
+    const filename = state.currentFormat === "hf-readme"
+      ? "README.md"
+      : `L-BOM.${state.currentFormat === "json" ? "json" : "txt"}`;
     const blob = new Blob([state.renderedOutput], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `L-BOM.${extension}`;
+    link.download = filename;
     document.body.append(link);
     link.click();
     link.remove();
@@ -128,6 +136,7 @@ function bindEvents() {
     button.addEventListener("click", () => {
       state.currentFormat = button.dataset.format;
       syncFormatButtons();
+      elements.hfOptions.hidden = state.currentFormat !== "hf-readme";
     });
   }
 
@@ -188,16 +197,32 @@ async function runScan() {
   setBusy(true);
 
   try {
+    const body = {
+      path,
+      format: state.currentFormat,
+      compute_hash: elements.hashToggle.checked,
+    };
+
+    if (state.currentFormat === "hf-readme") {
+      const hfTitle = elements.hfTitle.value.trim();
+      const hfShortDescription = elements.hfShortDescription.value.trim();
+      const hfSdk = elements.hfSdk.value;
+      const hfAppFile = elements.hfAppFile.value.trim();
+      const hfAppPortRaw = elements.hfAppPort.value.trim();
+
+      if (hfTitle) body.hf_title = hfTitle;
+      if (hfShortDescription) body.hf_short_description = hfShortDescription;
+      if (hfSdk) body.hf_sdk = hfSdk;
+      if (hfAppFile) body.hf_app_file = hfAppFile;
+      if (hfAppPortRaw) body.hf_app_port = parseInt(hfAppPortRaw, 10);
+    }
+
     const payload = await fetchJson("/api/scan", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        path,
-        format: state.currentFormat,
-        compute_hash: elements.hashToggle.checked,
-      }),
+      body: JSON.stringify(body),
     });
 
     state.selectedPath = payload.selected_path;

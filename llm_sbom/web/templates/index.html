@@ -51,6 +51,7 @@
               <button class="segment active" data-format="json" type="button">JSON</button>
               <button class="segment" data-format="spdx" type="button">SPDX</button>
               <button class="segment" data-format="table" type="button">Table</button>
+              <button class="segment" data-format="hf-readme" type="button">HF Readme</button>
             </div>
           </div>
 
@@ -64,6 +65,38 @@
         <div class="helper-strip">
           <button id="use-current-folder" class="ghost-button" type="button">Use current folder</button>
           <button id="copy-path" class="ghost-button" type="button">Copy path</button>
+        </div>
+
+        <div id="hf-options" class="hf-options" hidden>
+          <p class="eyebrow">Hugging Face README options</p>
+          <p class="hf-options-note">HF Readme only supports a single model file. All fields below are optional overrides.</p>
+          <div class="hf-fields">
+            <label class="field">
+              <span class="field-label">Title</span>
+              <input id="hf-title" type="text" placeholder="Inferred from model metadata" autocomplete="off">
+            </label>
+            <label class="field">
+              <span class="field-label">Short description</span>
+              <input id="hf-short-description" type="text" placeholder="Inferred from model metadata" autocomplete="off">
+            </label>
+            <label class="field">
+              <span class="field-label">SDK</span>
+              <select id="hf-sdk">
+                <option value="">None</option>
+                <option value="gradio">gradio</option>
+                <option value="docker">docker</option>
+                <option value="static">static</option>
+              </select>
+            </label>
+            <label class="field">
+              <span class="field-label">App file</span>
+              <input id="hf-app-file" type="text" placeholder="e.g. app.py or index.html" autocomplete="off">
+            </label>
+            <label class="field">
+              <span class="field-label">App port</span>
+              <input id="hf-app-port" type="number" placeholder="Docker only" min="1" max="65535" autocomplete="off">
+            </label>
+          </div>
         </div>
 
         <div id="message" class="message" hidden></div>

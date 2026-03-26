@@ -13,11 +13,12 @@ from typing import Any, TypedDict
 from flask import Flask, jsonify, render_template, request
 
 from . import __version__
+from .huggingface import HuggingFaceReadmeOptions, render_huggingface_readme
 from .output import render_output
 from .scanner import MODEL_SUFFIXES, scan_path
 from .schema import SBOMDocument
 
-OUTPUT_FORMATS = {"json", "spdx", "table"}
+OUTPUT_FORMATS = {"json", "spdx", "table", "hf-readme"}
 
 
 class DirectoryEntry(TypedDict):
@@ -94,7 +95,7 @@ def create_app() -> Flask:
         if not isinstance(raw_path, str) or not raw_path.strip():
             return _error("A model file or directory path is required.", 400)
         if not isinstance(output_format, str) or output_format.lower() not in OUTPUT_FORMATS:
-            return _error("Output format must be one of: json, spdx, table.", 400)
+            return _error("Output format must be one of: json, spdx, table, hf-readme.", 400)
         if not isinstance(compute_hash, bool):
             return _error("The compute_hash value must be true or false.", 400)
 
@@ -109,7 +110,39 @@ def create_app() -> Flask:
 
         documents = scan_path(resolved, compute_hash=compute_hash)
         normalized_format = output_format.lower()
-        rendered_output = render_output(documents, normalized_format, color=False)
+
+        if normalized_format == "hf-readme":
+            if len(documents) != 1:
+                return _error(
+                    "Hugging Face README export currently supports scanning a single model file at a time.",
+                    400,
+                )
+
+            hf_title = payload.get("hf_title") or None
+            hf_sdk = payload.get("hf_sdk") or None
+            hf_app_file = payload.get("hf_app_file") or None
+            hf_app_port = payload.get("hf_app_port") or None
+            hf_short_description = payload.get("hf_short_description") or None
+
+            if hf_sdk and not isinstance(hf_sdk, str):
+                return _error("hf_sdk must be a string.", 400)
+            if hf_sdk and hf_sdk.lower() not in {"gradio", "docker", "static"}:
+                return _error("hf_sdk must be one of: gradio, docker, static.", 400)
+            if hf_app_port is not None and hf_sdk not in {None, "docker"}:
+                return _error("hf_app_port can only be used with hf_sdk docker.", 400)
+
+            rendered_output = render_huggingface_readme(
+                documents[0],
+                HuggingFaceReadmeOptions(
+                    title=hf_title,
+                    sdk=hf_sdk.lower() if hf_sdk else None,
+                    app_file=hf_app_file,
+                    app_port=int(hf_app_port) if hf_app_port is not None else None,
+                    short_description=hf_short_description,
+                ),
+            )
+        else:
+            rendered_output = render_output(documents, normalized_format, color=False)
 
         return jsonify(
             {
