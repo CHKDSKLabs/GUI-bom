@@ -120,7 +120,7 @@ function bindEvents() {
 
     const filename = state.currentFormat === "hf-readme"
       ? "README.md"
-      : `L-BOM.${state.currentFormat === "json" ? "json" : "txt"}`;
+      : `l-bom.${state.currentFormat === "json" ? "json" : "txt"}`;
     const blob = new Blob([state.renderedOutput], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");

@@ -3,7 +3,7 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "L-BOM"
+name = "l-bom"
 version = "0.2.0"
 description = "Generate Software Bill of Materials documents for local LLM model files."
 readme = "README.md"
@@ -20,7 +20,7 @@ dependencies = [
 ]
 
 [project.scripts]
-L-BOM = "llm_sbom.cli:main"
+l-bom = "llm_sbom.cli:main"
 
 [project.optional-dependencies]
 dev = [

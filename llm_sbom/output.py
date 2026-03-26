@@ -68,7 +68,7 @@ def _render_spdx_document(document: SBOMDocument) -> str:
 
     package_name, package_version = _derive_package_identity(document.model_filename)
     package_ref = f"SPDXRef-Package-{_sanitize_spdx_id(document.model_filename)}"
-    document_name = f"L-BOM-{document.model_filename}"
+    document_name = f"l-bom-{document.model_filename}"
     created = _normalize_spdx_timestamp(document.generated_at)
     namespace = f"https://spdx.org/spdxdocs/{_sanitize_spdx_id(document_name)}-{uuid4()}"
     license_value = document.license or "NOASSERTION"
